@@ -7,14 +7,14 @@ import org.testng.ITestResult;
 import org.testng.annotations.*;
 
 @CucumberOptions(
-        tags = "@SearchView and @CheckActions",
+        tags = "@Trendyol",
         features = "src/test/resources/features",
         glue = {"stepdefinitions", "utils"},
         plugin = {
                 "pretty",
                 "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"
-
         })
+
 public class TestRunner extends AbstractTestNGCucumberTests {
 
     @Override

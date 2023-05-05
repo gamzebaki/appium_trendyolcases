@@ -43,8 +43,8 @@ public class DriverManager {
             case "android":
                 DesiredCapabilities capabilities = new DesiredCapabilities();
                 capabilities.setCapability("platformName", "Android");
-                capabilities.setCapability("appPackage", "io.appium.android.apis");
-                capabilities.setCapability("appActivity", "io.appium.android.apis.ApiDemos");
+                capabilities.setCapability("appPackage", "trendyol.com");
+                capabilities.setCapability("appActivity", "com.trendyol.common.splash.impl.ui.SplashActivity");
                 capabilities.setCapability("noReset", false);
                 capabilities.setCapability("autoGrantPermissions", true);
                 try {

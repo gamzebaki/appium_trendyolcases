@@ -2,6 +2,7 @@ package utils;
 
 import com.google.common.collect.ImmutableMap;
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileBy;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.PointerInput;
 import org.openqa.selenium.interactions.Sequence;
@@ -47,6 +48,10 @@ public class ElementHelper {
         js.executeScript("mobile:performEditorAction", ImmutableMap.of("action", "done"));
     }
 
+    public void pressSearch(){
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("mobile:performEditorAction", ImmutableMap.of("action", "search"));
+    }
     public void click(By locator) {
         findElement(locator).click();
     }
@@ -69,6 +74,29 @@ public class ElementHelper {
                 if (elem.getText().equals(text)) {
                     check = true;
                     elem.click();
+                    break;
+                }
+            }
+            if (check) {
+                break;
+            } else {
+                scrollDown();
+                i++;
+            }
+        }
+        Assert.assertTrue(check, "Listede istediğin textteki elamanı bulamadım!!!");
+    }
+
+    public void clickNearElementWithText(By locator,String text) {
+        int i = 0;
+        boolean check = false;
+        findElement(locator);
+        while (i < 4) {
+            List<WebElement> elementList = findElements(locator);
+            for (WebElement elem : elementList) {
+                if (elem.getText().equals(text)) {
+                    check = true;
+                    elem.findElement(By.xpath("/../android.widget.Checkbox")).click();
                     break;
                 }
             }
@@ -115,6 +143,13 @@ public class ElementHelper {
         return driver.findElements(by);
     }
 
+
+    public void UiScrollable(String text){
+        String scrollableList = "new UiScrollable(new UiSelector().scrollable(true))";
+        String scrollIntoView = ".scrollIntoView(new UiSelector().text(\""+text+"\"))";
+        driver.findElement(MobileBy.AndroidUIAutomator(scrollableList + scrollIntoView)).click();
+    }
+
     public boolean checkEndOfPage(String previusPageSource) {
         return !previusPageSource.equals(driver.getPageSource());
     }
@@ -134,10 +169,27 @@ public class ElementHelper {
         Sequence scroll = new Sequence(finger, 0);
         scroll.addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), startX, startY));
         scroll.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
-        scroll.addAction(finger.createPointerMove(Duration.ofMillis(500), PointerInput.Origin.viewport(), endx, endY));
+        scroll.addAction(finger.createPointerMove(Duration.ofMillis(300), PointerInput.Origin.viewport(), endx, endY));
         scroll.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
         ((RemoteWebDriver) driver).perform(List.of(scroll));
     }
 
+
+    public void scrollDownWithElement(By filtreleme){
+
+        int startX = driver.findElement(filtreleme).getSize().getWidth() / 2;
+        int startY = driver.findElement(filtreleme).getSize().getHeight() / 2;
+        int endx = driver.findElement(filtreleme).getSize().getWidth() / 2;
+        int endY = (int) (driver.findElement(filtreleme).getSize().getHeight() * 0.2);
+
+        PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+        Sequence scroll = new Sequence(finger, 0);
+        scroll.addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), startX, startY));
+        scroll.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+        scroll.addAction(finger.createPointerMove(Duration.ofMillis(500), PointerInput.Origin.viewport(), endx, endY));
+        scroll.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+        ((RemoteWebDriver) driver).perform(List.of(scroll));
+
+    }
 
 }
